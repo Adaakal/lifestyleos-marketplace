@@ -9,10 +9,12 @@ description: >
   extension. Each clip ships a master block plus paste-ready native copy for TikTok, Instagram
   Reels, YouTube Shorts, LinkedIn, Substack, and beehiiv, with SEO keywords, an AEO question and
   40-60w answer, and a GEO quotable. Timed clips also ship an edit decision list separating source
-  from output timecodes, so edit notes survive recuts.
+  from output timecodes, so edit notes survive recuts. Long sources are shortlisted first —
+  every standalone moment listed with its timecodes and hook — then packaged on request, one
+  clip at a time, so nothing truncates and no research is spent on clips you won't post.
 metadata:
   author: Adaugo Akaluso
-  version: '1.0.0'
+  version: '1.1.0'
   license: MIT
 ---
 
@@ -45,7 +47,7 @@ The core shift in this edition: you don't produce one generic caption plus a "sh
 
 ## Core Capabilities
 
-1. **Clip Extraction** — Mine a long video/transcript for each standalone insight, and package each one separately.
+1. **Clip Extraction & Shortlisting** — Mine a long video/transcript for each standalone insight, shortlist them for the user, and package the chosen ones separately and in full.
 2. **Optional Pipeline Detection** — If wired to a content database (Notion, Airtable, a sheet), monitor entries in a "Drafting" status.
 3. **Non-Destructive Enhancement** — Fills empty fields, never overwrites manual entries.
 4. **Deep Research Validation** — Fact-checks stats, studies, tech claims, and domain facts before publishing.
@@ -121,15 +123,19 @@ Secondary: LinkedIn · Substack · beehiiv
 ## Processing Workflow
 
 ```
-1. INGEST  — Read the source (video, transcript, URL, or database draft). If pipeline-
-             triggered, read all filled fields first and preserve them.
-2. SEGMENT — Run Clip Extraction (below). Decide: one clip or several?
-3. RESEARCH— For each clip, extract factual claims and validate BEFORE writing copy.
-4. RETIME  — For any timed source, run the Timecode Protocol: build the EDL and map
-             every overlay cue from source time to output time, per cut.
-5. BUILD   — For each clip, produce the Clip Master Block, then the platform-native blocks.
-6. SYNC    — Map results back to your content database (empty fields only) and set status.
-7. HAND OFF— Summarize what shipped and what needs your eyes.
+1. INGEST   — Read the source (video, transcript, URL, or database draft). If pipeline-
+              triggered, read all filled fields first and preserve them.
+2. SEGMENT  — Run Clip Extraction (below). Decide: one clip or several?
+3. SHORTLIST— More than one clip? Publish the Clip Shortlist FIRST. Package clip 1, plus
+              any clip the user names. Everything below runs only on clips being packaged.
+4. RESEARCH — For each clip being packaged, extract factual claims and validate BEFORE
+              writing copy.
+5. RETIME   — For any timed source, run the Timecode Protocol: build the EDL and map
+              every overlay cue from source time to output time, per cut.
+6. BUILD    — For each clip, produce the Clip Master Block, then the platform-native blocks.
+7. SYNC     — Map results back to your content database (empty fields only) and set status.
+8. HAND OFF — Summarize what shipped, what's still on the shortlist, and what needs
+              your eyes.
 ```
 
 ## Clip Extraction — find the posts inside the footage
@@ -148,7 +154,50 @@ A long recording usually contains several standalone posts. Your job is to find 
 
 **Propose, don't overreach.** When you have a timed source, propose in/out timecodes and a suggested MP4 filename. When you don't (text draft, rough idea), skip timecodes/filename/edit-notes entirely rather than inventing them — never fabricate a timecode you can't see.
 
-If a long source yields many candidates, lead with the strongest 3–5 and note the rest as a shortlist the user can request packages for.
+## The Clip Shortlist — the gate before packaging
+
+**A full package is ~51 authored fields, roughly 3,000 words.** Five of them in one response
+runs ~15,000 words: it truncates mid-clip, and it spends research on clips that will never
+be posted. So when a source yields more than one clip, the shortlist comes first and the
+packages come on request.
+
+A shortlist is **not a partial output** — it is a menu. Its job is to let the user redirect
+the cuts before 3,000 words are committed to one of them.
+
+```
+Found [N] standalone moments in [runtime]. Strongest first.
+
+CLIP SHORTLIST
+ 1. [Short title]                        [src in → out] ([Xs])  [PILLAR CODE]
+    "[The hook line, verbatim or tightened]"
+ 2. [Short title]                        [src in → out] ([Xs])  [PILLAR CODE]
+    "[The hook line]"
+ …
+[N]. [Short title]                       [src in → out] ([Xs])  [PILLAR CODE]
+    "[The hook line]"
+
+Packaging #1 below. Say which others you want — "package 3 and 5" works.
+```
+
+Two lines per entry: title, source in/out, runtime, pillar code, hook. No captions, no
+hashtags, no research — those belong to a package, and packaging is exactly what the user
+is being asked to choose.
+
+Then:
+
+- **Package clip 1 immediately**, in full, in the same response. The default path still ends
+  with something complete and postable — the shortlist never leaves the user empty-handed.
+- **Package any clip the user names**, in full, on request. Several at once is fine; number
+  them and ship each one complete.
+- **Research only what you are packaging.** Never fact-check the whole shortlist up front.
+  The claims inside clip 7 do not matter until clip 7 is chosen.
+- **Rebuild, don't recall.** If a clip is requested several turns later, re-derive its EDL
+  from the source transcript rather than trusting an earlier summary. Patching remembered
+  numbers is how output timecodes go silently wrong.
+- **Keep the shortlist alive.** Restate what's still unpackaged when you hand off, so the
+  remaining clips don't get lost in scrollback.
+
+If the source yields exactly one clip, skip the shortlist and package it directly.
 
 ## Timecode Protocol — source vs output (MANDATORY for any timed source)
 
@@ -284,7 +333,7 @@ notify the user before finalizing.
 
 # OUTPUT — The Clip Package
 
-For **each clip**, produce two parts: the **Clip Master Block** (platform-agnostic source of truth) followed by the **Platform-Native Blocks** (paste-ready copy). When there are multiple clips, number them (`CLIP 1 of 3`, `CLIP 2 of 3`, …) and give each its own full package.
+For **each clip you are packaging**, produce two parts: the **Clip Master Block** (platform-agnostic source of truth) followed by the **Platform-Native Blocks** (paste-ready copy). Number every package against the shortlist, not against how many you happen to be building this turn — clip 5 of 8 stays `CLIP 5 of 8` even when it ships alone.
 
 Use this exact structure. Fill every field that applies; omit production-only fields (In/out, MP4, Visual/edit notes) when the source has no video/timing rather than writing "N/A" everywhere.
 
@@ -413,9 +462,9 @@ Fields preserved (manually filled): [list — NOT updated]
 
 ## Universal Access Contexts
 
-- **Claude.ai Chat** — user uploads video, pastes URL, or requests a package manually.
-- **Cowork Agents** — called by another agent, or auto-triggered when an agent queries a connected content database.
-- **Claude Code** — full research via all available MCP servers; read/write a connected database directly; batch processing.
+- **Claude.ai Chat** — user uploads video, pastes URL, or requests a package manually. Shortlist and packages both render inline.
+- **Cowork Agents** — called by another agent, or auto-triggered when an agent queries a connected content database. Write packages to files as in Claude Code below.
+- **Claude Code** — full research via all available MCP servers; read/write a connected database directly; batch processing. **Write each package to its own file** — `clip-NN-<kebab-title>.md` — and return the shortlist plus the file paths in chat instead of printing packages inline. A file can be opened, edited, and pasted from; chat scrollback cannot. This also lifts the response ceiling entirely, so a user who genuinely wants all eight clips can have them.
 - **Chrome Extension** — TikTok has no public draft API; if the user shares draft content, extract the URL if available, process the transcript if provided, and run the standard clip package. The user must manually copy/paste draft content.
 
 ## Optimization Focus
@@ -432,7 +481,12 @@ Every field is engineered for performance and for being *found*:
 
 ## Rules and Guardrails
 
-1. **One complete package per clip** — never a partial output. Multiple clips are numbered.
+1. **One complete package per clip** — never a partial output. This governs the completeness
+   of a package, not how many packages ship per turn: a Clip Shortlist is a menu, not a
+   partial package. Multiple clips are numbered.
+1b. **Shortlist before you package** — more than one clip means the shortlist goes out first,
+   with clip 1 packaged in full. Never build every clip unasked; never research a clip you
+   haven't been asked to package.
 2. **Native copy, not a fit table** — draft the real post for each platform; give honest fit as a one-line note inside the block, never as a reason to leave it blank.
 3. **Never overwrite manual input** — if the user filled a database field, it stays untouched.
 4. **Always research factual claims** before writing copy that repeats them.
@@ -451,8 +505,8 @@ Every field is engineered for performance and for being *found*:
 - **Research contradicts the content** — stop and notify: `⚠️ RESEARCH ALERT — Original: [claim] · Finding: [correction + source] · Recommendation: [rewrite]. Proceed with correction or keep original?`
 - **Silent / music-only video** — ask: "Can you describe what this shows or the main point? I'll build the package from your description."
 - **Content spans multiple pillars** — pick the dominant pillar for the master block; note the bridge and offer to reframe for the secondary.
-- **Long-form source** — this is the multi-clip case: extract the standalone moments and package each. If one long idea genuinely can't be cut down, flag it as a Substack/YouTube long-form candidate rather than forcing a short.
-- **Batch request** — process in sequence; number every package.
+- **Long-form source** — this is the multi-clip case: extract every standalone moment, shortlist them all, package clip 1 and whatever else is requested. If one long idea genuinely can't be cut down, flag it as a Substack/YouTube long-form candidate rather than forcing a short.
+- **Batch request** — the user asking for several named clips at once overrides the one-at-a-time default. Process in sequence, number every package against the shortlist, and write to files if the context allows it.
 - **Clip already recut since the package was written** — do not patch individual numbers. Rebuild the EDL from the source transcript and recompute every output time and overlay cue. Patching one number leaves the rest silently wrong.
 - **Platforms need different lengths** — build one EDL table per cut, name each, and note which leading segments are shared so overlays through that point only need timing once.
 - **Trim lengths unknown** — ship the source column complete, the output column blank, and one worked example of the offset arithmetic. Offer the Clip Re-Timer so the user can fill it in as they edit.
@@ -468,6 +522,9 @@ Automatic (if pipeline-triggered):
   ✅ Status → "Ready to Post"
   ✅ Research notes appended (if applicable)
 
+Still on the shortlist:
+  [Restate every clip not yet packaged, by number and title, so it survives scrollback]
+
 Manual review needed:
   1. Confirm the clip cuts (SOURCE in/out points) are right
   2. Confirm the EDL segment order matches the intended edit
@@ -477,6 +534,7 @@ Manual review needed:
 
 What I need from you (if anything):
   "Do these cuts capture the best moments?
+   Which other clips from the shortlist do you want packaged?
    Does the caption sound like you?
    Which platform are you posting first?"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
