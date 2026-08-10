@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clip Re-Timer</title>
+<!-- No external requests: fonts resolve from the local stack below so this file works fully offline. -->
+<style>
+  :root{
+    /* sand → espresso, with olive + terracotta accents */
+    --sand:#EFE7DA;
+    --panel:#F7F2E9;
+    --panel-deep:#E7DCCB;
+    --line:#D6C8B4;
+    --espresso:#2E2119;
+    --muted:#6B5B4C;
+    --olive:#5C6438;
+    --olive-wash:#E6E5D2;
+    --terracotta:#A34A2E;
+    --terracotta-wash:#F2E2DB;
+
+    --display:"Bodoni Moda","Didot","Bodoni MT",Georgia,serif;
+    --body:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    margin:0;padding:0 0 60px;background:var(--sand);color:var(--espresso);
+    font:16px/1.55 var(--body);
+  }
+  header{
+    padding:26px 18px 18px;border-bottom:1px solid var(--line);
+    position:sticky;top:0;background:rgba(239,231,218,.95);backdrop-filter:blur(10px);z-index:20;
+  }
+  h1{
+    margin:0;font-family:var(--display);font-size:30px;font-weight:400;
+    letter-spacing:-.005em;line-height:1.1;
+  }
+  header p{margin:7px 0 0;color:var(--muted);font-size:13.5px;max-width:52ch}
+  .wrap{padding:20px 18px;max-width:840px;margin:0 auto}
+  section{margin-bottom:30px}
+  h2{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 10px;font-weight:400;
+  }
+  .hint{color:var(--muted);font-size:13.5px;margin:0 0 13px;max-width:60ch}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+
+  /* segment rows */
+  .seg{
+    display:grid;grid-template-columns:24px 1fr auto;gap:11px;align-items:center;
+    padding:12px;border-bottom:1px solid var(--line);
+  }
+  .seg:last-child{border-bottom:none}
+  .seg.off{opacity:.42}
+  .seg .num{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center}
+  .seg .body{min-width:0}
+  .seg .label{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .seg .times{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.01em}
+  .seg .out{color:var(--olive);font-weight:700}
+  .seg.off .out{color:var(--muted);font-weight:400}
+  .ctrls{display:flex;gap:5px;flex-shrink:0}
+  .ctrls button{
+    background:var(--sand);border:1px solid var(--line);color:var(--espresso);
+    width:32px;height:32px;border-radius:3px;font-size:14px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;padding:0;font-family:var(--body);
+  }
+  .ctrls button:active{background:var(--panel-deep)}
+  .ctrls button.on{color:var(--olive);border-color:var(--olive);background:var(--olive-wash)}
+  .ctrls button.offbtn{color:var(--terracotta);border-color:var(--terracotta);background:var(--terracotta-wash)}
+
+  .editrow{display:grid;grid-template-columns:1fr 76px 76px;gap:8px;padding:11px 12px}
+  input[type=text]{
+    width:100%;background:var(--sand);border:1px solid var(--line);color:var(--espresso);
+    border-radius:3px;padding:9px 10px;font-size:14px;font-family:var(--body);
+  }
+  input[type=text]:focus{outline:none;border-color:var(--olive);background:#fff}
+  input.t{font-family:var(--mono);font-size:13px;text-align:center}
+  ::placeholder{color:#A8998A}
+
+  .btn{
+    background:var(--espresso);color:var(--panel);border:1px solid var(--espresso);border-radius:3px;
+    padding:11px 17px;font-size:13px;cursor:pointer;font-family:var(--mono);
+    letter-spacing:.07em;text-transform:uppercase;
+  }
+  .btn.ghost{background:transparent;color:var(--espresso);border-color:var(--line)}
+  .btn:active{opacity:.78}
+  .btnrow{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}
+
+  .total{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding:14px;background:var(--olive-wash);border-top:1px solid var(--line);
+  }
+  .total b{font-family:var(--display);font-size:26px;font-weight:400;color:var(--olive)}
+  .total span{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.13em}
+
+  .cue{
+    display:grid;grid-template-columns:72px 1fr 70px 32px;gap:9px;align-items:center;
+    padding:10px 12px;border-bottom:1px solid var(--line);
+  }
+  .cue:last-of-type{border-bottom:none}
+  .cue .res{font-family:var(--mono);font-size:13px;text-align:center;font-weight:700;color:var(--olive)}
+  .cue .res.gone{color:var(--terracotta);font-size:10px;font-weight:400;line-height:1.25;letter-spacing:.04em}
+  .cuehead{
+    display:grid;grid-template-columns:72px 1fr 70px 32px;gap:9px;
+    padding:9px 12px;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);
+    background:var(--panel-deep);
+  }
+  .cuehead span:nth-child(3){text-align:center}
+
+  pre{
+    background:var(--panel);border:1px solid var(--line);border-radius:4px;
+    padding:14px;font-size:11.5px;line-height:1.7;overflow-x:auto;white-space:pre;
+    font-family:var(--mono);color:var(--espresso);margin:0;
+  }
+  details{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:14px 16px}
+  summary{
+    cursor:pointer;font-family:var(--display);font-size:17px;color:var(--espresso);
+  }
+  details p{color:var(--muted);font-size:13.5px;margin:12px 0 0;max-width:62ch}
+  details code{
+    background:var(--panel-deep);padding:2px 6px;border-radius:2px;
+    font-size:12px;font-family:var(--mono);color:var(--espresso);
+  }
+  .empty{padding:26px 14px;text-align:center;color:var(--muted);font-size:13.5px;font-style:italic}
+  footer{
+    color:var(--muted);font-size:12px;text-align:center;padding:10px 18px 30px;font-style:italic;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Clip Re-Timer</h1>
+  <p>Source timecodes stay fixed. Output timecodes recalculate every time you reorder or drop a segment.</p>
+</header>
+
+<div class="wrap">
+
+<section>
+  <h2>Segments</h2>
+  <p class="hint">Enter each line from your caption editor with its <em>source</em> in and out. Reorder with the arrows, toggle a segment out of the cut with the circle. The output column updates live.</p>
+  <div class="card">
+    <div id="segs"></div>
+    <div class="total"><span>Cut runtime</span><b id="total">0:00</b></div>
+  </div>
+  <div class="btnrow">
+    <button class="btn ghost" onclick="loadDemo()">Load demo clip</button>
+    <button class="btn ghost" onclick="clearAll()">Clear</button>
+  </div>
+</section>
+
+<section>
+  <h2>Add a segment</h2>
+  <div class="card">
+    <div class="editrow">
+      <input type="text" id="nLabel" placeholder="What's said in this segment">
+      <input type="text" class="t" id="nIn" placeholder="0:29">
+      <input type="text" class="t" id="nOut" placeholder="0:35">
+    </div>
+  </div>
+  <div class="btnrow"><button class="btn" onclick="commitSeg()">Add to list</button></div>
+</section>
+
+<section>
+  <h2>Overlay &amp; text cues</h2>
+  <p class="hint">Anchor every overlay to the <em>source</em> timecode where the moment happens. This tells you where it lands in the new cut.</p>
+  <div class="card">
+    <div class="cuehead"><span>Source</span><span>Overlay text</span><span>Output</span><span></span></div>
+    <div id="cues"></div>
+  </div>
+  <div class="btnrow"><button class="btn" onclick="addCue()">+ Add cue</button></div>
+</section>
+
+<section>
+  <h2>Export</h2>
+  <p class="hint">Paste this into the Notion page so the edit notes carry both timelines.</p>
+  <pre id="export"></pre>
+  <div class="btnrow"><button class="btn" onclick="copyExport()" id="copybtn">Copy to clipboard</button></div>
+</section>
+
+<section>
+  <details>
+    <summary>Why output timecodes drift</summary>
+    <p>Every cut you make shifts everything downstream. If you trim four seconds out at 0:05, the moment that used to sit at 0:30 now sits at 0:26 — and so does every overlay you anchored to it.</p>
+    <p>The fix is to stop treating one number as the truth. <code>Source</code> is where a moment lives in the original recording and never changes. <code>Output</code> is where it lands in the current cut and changes constantly. Notes should always be written against source; the tool computes output.</p>
+    <p>The math is a running offset: <code>output = source − (everything removed before it) + (everything added before it)</code>. Reordering is just removing and re-adding, which is why a reorder shifts things as much as a trim does.</p>
+  </details>
+</section>
+
+</div>
+
+<footer>Nothing is saved — export before you close the tab.</footer>
+
+<script>
+var segs = [];
+var cues = [];
+
+function parseT(s){
+  if(s==null) return NaN;
+  s = String(s).trim();
+  if(!s) return NaN;
+  var p = s.split(":"), v;
+  if(p.length===1){ v = parseFloat(p[0]); }
+  else if(p.length===2){ v = parseFloat(p[0])*60 + parseFloat(p[1]); }
+  else if(p.length===3){ v = parseFloat(p[0])*3600 + parseFloat(p[1])*60 + parseFloat(p[2]); }
+  else return NaN;
+  return isNaN(v) ? NaN : v;
+}
+function fmt(sec){
+  if(sec==null||isNaN(sec)) return "—";
+  var neg = sec<0; sec = Math.abs(sec);
+  var m = Math.floor(sec/60), s = sec - m*60;
+  var ss = Math.round(s*10)/10, whole = Math.floor(ss), dec = Math.round((ss-whole)*10);
+  return (neg?"-":"") + m + ":" + (whole<10?"0":"") + whole + (dec?("."+dec):"");
+}
+
+function compute(){
+  var t = 0;
+  for(var i=0;i<segs.length;i++){
+    var g = segs[i], dur = g.out - g.in;
+    if(!g.on || isNaN(dur) || dur<=0){ g.oIn=null; g.oOut=null; continue; }
+    g.oIn = t; t += dur; g.oOut = t;
+  }
+  return t;
+}
+function mapTime(src){
+  if(isNaN(src)) return null;
+  var i,g;
+  // half-open [in, out) so a cue on a boundary belongs to the segment that STARTS there
+  for(i=0;i<segs.length;i++){
+    g = segs[i];
+    if(!g.on || g.oIn==null) continue;
+    if(src >= g.in && src < g.out) return g.oIn + (src - g.in);
+  }
+  // A cue sitting exactly on a boundary belongs to the segment that STARTS there. If such a
+  // segment exists but is dropped from this cut, the moment is gone — say so rather than
+  // sliding the cue onto the end of whatever now precedes it.
+  for(i=0;i<segs.length;i++){
+    if(segs[i].in === src) return null;
+  }
+  // No segment starts here, so this is a true tail: map it to the end of the segment it closes.
+  for(i=0;i<segs.length;i++){
+    g = segs[i];
+    if(!g.on || g.oIn==null) continue;
+    if(src === g.out) return g.oOut;
+  }
+  return null;
+}
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function render(){
+  var total = compute(), h = "";
+  if(!segs.length){
+    h = '<div class="empty">No segments yet. Add one below, or load the demo clip.</div>';
+  }
+  for(var i=0;i<segs.length;i++){
+    var g = segs[i];
+    var outTxt = (g.on && g.oIn!=null)
+      ? '<span class="out">'+fmt(g.oIn)+' &rarr; '+fmt(g.oOut)+'</span>'
+      : '<span>not in cut</span>';
+    h += '<div class="seg'+(g.on?'':' off')+'">'
+       +   '<div class="num">'+(i+1)+'</div>'
+       +   '<div class="body">'
+       +     '<div class="label">'+esc(g.label||"(untitled)")+'</div>'
+       +     '<div class="times">src '+fmt(g.in)+' &rarr; '+fmt(g.out)+' &nbsp;·&nbsp; '+outTxt+'</div>'
+       +   '</div>'
+       +   '<div class="ctrls">'
+       +     '<button onclick="move('+i+',-1)" aria-label="Move up">&uarr;</button>'
+       +     '<button onclick="move('+i+',1)" aria-label="Move down">&darr;</button>'
+       +     '<button class="'+(g.on?'on':'offbtn')+'" onclick="toggle('+i+')" aria-label="Toggle in cut">'+(g.on?'&#9679;':'&#9675;')+'</button>'
+       +     '<button onclick="delSeg('+i+')" aria-label="Delete">&times;</button>'
+       +   '</div>'
+       + '</div>';
+  }
+  document.getElementById("segs").innerHTML = h;
+  document.getElementById("total").textContent = fmt(total);
+
+  var c = "";
+  if(!cues.length) c = '<div class="empty">No cues yet.</div>';
+  for(var j=0;j<cues.length;j++){
+    var q = cues[j], m = mapTime(q.src);
+    var res = (m==null) ? '<div class="res gone">not in cut</div>' : '<div class="res">'+fmt(m)+'</div>';
+    c += '<div class="cue">'
+       +   '<input type="text" class="t" value="'+esc(q.raw||"")+'" oninput="setCue('+j+',this.value)" placeholder="0:35">'
+       +   '<input type="text" value="'+esc(q.text||"")+'" oninput="setCueText('+j+',this.value)" placeholder="Overlay text">'
+       +   res
+       +   '<button class="btn ghost" style="padding:7px 0;font-size:15px" onclick="delCue('+j+')">&times;</button>'
+       + '</div>';
+  }
+  document.getElementById("cues").innerHTML = c;
+  buildExport(total);
+}
+
+function pad(s,n){ s=String(s); while(s.length<n) s+=" "; return s; }
+function buildExport(total){
+  var L = [];
+  L.push("EDIT DECISION LIST");
+  L.push("Cut runtime: "+fmt(total));
+  L.push("");
+  L.push(" # | SOURCE          | OUTPUT          | LINE");
+  L.push("---+-----------------+-----------------+--------------------------");
+  var n=0;
+  for(var i=0;i<segs.length;i++){
+    var g=segs[i];
+    if(!g.on) continue;
+    n++;
+    L.push(pad(" "+n,3)+"| "+pad(fmt(g.in)+" -> "+fmt(g.out),16)+"| "+pad(fmt(g.oIn)+" -> "+fmt(g.oOut),16)+"| "+(g.label||""));
+  }
+  var dropped = segs.filter(function(g){return !g.on;});
+  if(dropped.length){
+    L.push("");
+    L.push("DROPPED FROM THIS CUT");
+    dropped.forEach(function(g){ L.push("  src "+fmt(g.in)+" -> "+fmt(g.out)+"  "+(g.label||"")); });
+  }
+  if(cues.length){
+    L.push("");
+    L.push("OVERLAY CUES");
+    L.push("SOURCE  | OUTPUT  | TEXT");
+    L.push("--------+---------+-------------------------");
+    cues.forEach(function(q){
+      var m = mapTime(q.src);
+      L.push(pad(fmt(q.src),8)+"| "+pad(m==null?"cut":fmt(m),8)+"| "+(q.text||""));
+    });
+  }
+  document.getElementById("export").textContent = L.join("\n");
+}
+
+function move(i,d){
+  var j=i+d;
+  if(j<0||j>=segs.length) return;
+  var tmp=segs[i]; segs[i]=segs[j]; segs[j]=tmp;
+  render();
+}
+function toggle(i){ segs[i].on = !segs[i].on; render(); }
+function delSeg(i){ segs.splice(i,1); render(); }
+function commitSeg(){
+  var l=document.getElementById("nLabel").value.trim();
+  var a=parseT(document.getElementById("nIn").value);
+  var b=parseT(document.getElementById("nOut").value);
+  if(isNaN(a)||isNaN(b)||b<=a){ alert("Give a valid source in and out, like 0:29 and 0:35."); return; }
+  segs.push({label:l,in:a,out:b,on:true});
+  document.getElementById("nLabel").value="";
+  document.getElementById("nIn").value="";
+  document.getElementById("nOut").value="";
+  render();
+}
+function clearAll(){ segs=[]; cues=[]; render(); }
+function addCue(){ cues.push({raw:"",src:NaN,text:""}); render(); }
+function setCue(j,v){ cues[j].raw=v; cues[j].src=parseT(v); render(); }
+function setCueText(j,v){ cues[j].text=v; buildExport(compute()); }
+function delCue(j){ cues.splice(j,1); render(); }
+
+function copyExport(){
+  var t=document.getElementById("export").textContent;
+  var b=document.getElementById("copybtn");
+  function done(){ b.textContent="Copied"; setTimeout(function(){b.textContent="Copy to clipboard";},1600); }
+  function fallback(){
+    var ta=document.createElement("textarea");
+    ta.value=t; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); done(); }catch(e){ alert("Select the text above and copy manually."); }
+    document.body.removeChild(ta);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(done,fallback);
+  } else { fallback(); }
+}
+
+function loadDemo(){
+  // Neutral demo preset — replace with your own clip's data.
+  segs = [
+    {label:"Here's the one setting that changed how I work.", in:29, out:35, on:true},
+    {label:"For years I did this the slow way, by hand,", in:2, out:10, on:true},
+    {label:"copying the same thing over and over", in:10, out:14, on:true},
+    {label:"every single day.", in:14, out:17, on:true},
+    {label:"Then I found this one toggle,", in:17, out:20, on:true},
+    {label:"buried three menus deep.", in:20, out:22, on:true},
+    {label:"It's not a huge feature,", in:22, out:25, on:true},
+    {label:"but it saves me hours a week.", in:25, out:29, on:true},
+    {label:"It takes about ten seconds to turn on.", in:35, out:41, on:true},
+    {label:"Try it, then watch how much faster the whole thing goes.", in:41, out:47, on:true},
+    {label:"So the other day,", in:0, out:2, on:false}
+  ];
+  cues = [
+    {raw:"0:29", src:29, text:"THE ONE SETTING"},
+    {raw:"0:08", src:8,  text:"1. THE SLOW WAY"},
+    {raw:"0:10", src:10, text:"2. EVERY DAY"},
+    {raw:"0:14", src:14, text:"3. BY HAND"},
+    {raw:"0:35", src:35, text:"10 SECONDS TO TURN ON"},
+    {raw:"0:41", src:41, text:"NOW WATCH IT FLY"}
+  ];
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+loadDemo();
+</script>
+</body>
+</html>

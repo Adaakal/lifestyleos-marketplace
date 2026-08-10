@@ -1,0 +1,9 @@
+{
+  "name": "content-repurposer",
+  "description": "Reverse-engineers videos, transcripts, and drafts into research-validated, platform-ready clip packages — paste-ready native copy for TikTok, Reels, Shorts, LinkedIn, Substack, and beehiiv, with SEO/AEO/GEO optimization and recut-safe timecodes.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Adaugo Akaluso"
+  },
+  "license": "MIT"
+}

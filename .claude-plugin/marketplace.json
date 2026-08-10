@@ -1,0 +1,14 @@
+{
+  "name": "lifestyleos-marketplace",
+  "description": "Content and lifestyle-operations plugins for Claude Code — tools for turning raw material into research-validated, platform-ready output.",
+  "owner": {
+    "name": "Adaugo Akaluso"
+  },
+  "plugins": [
+    {
+      "name": "content-repurposer",
+      "source": "./content-repurposer",
+      "description": "Turn one recording into a stack of research-validated, platform-ready clip packages."
+    }
+  ]
+}
