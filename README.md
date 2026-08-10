@@ -45,6 +45,43 @@ marked spots:
 2. **Your Voice** — how your copy should sound, so drafts come out in your voice.
 3. **Content-database fields** (optional) — match the sync block to your own Notion/Airtable/sheet if you run a content pipeline.
 
+## Using it outside Claude Code
+
+The packaging here is Claude Code's — `.claude-plugin/`, `marketplace.json`, and
+`/plugin marketplace add` are its format, and no other tool reads them. The *payload* is
+not: `SKILL.md` is ~5,200 words of plain-English instructions with no Claude-specific
+syntax in the body, and the Clip Re-Timer is a standalone HTML file that needs no AI tool
+at all.
+
+Three ways to use it without installing the plugin:
+
+**1. claude.ai or the Claude desktop app.** Upload `content-repurposer/skills/content-reverse-engineer/`
+(SKILL.md plus its `assets/` folder) as a skill under Settings → Capabilities → Skills. It
+loads on demand there the same way it does in Claude Code.
+
+**2. Any other LLM.** Paste the body of `SKILL.md` — everything below the YAML
+frontmatter — into a system prompt, a project's custom knowledge, or an uploaded file. The
+frontmatter is a Claude-specific trigger mechanism and can be dropped. The
+`## Universal Access Contexts` section is also Claude-specific and safe to delete.
+
+**3. The Clip Re-Timer alone.** Open
+`content-repurposer/skills/content-reverse-engineer/assets/clip-retimer.html` in any
+browser. It is fully offline and makes no network requests. If all you want is edit notes
+that survive a recut, you never have to touch an AI tool.
+
+### Two honest caveats
+
+**Research validation needs web search.** Fact-checking claims before writing copy is one
+of the seven core capabilities, and it's the one separating this from a caption generator.
+On a model without search, that step can't run — the skill is written to say so and
+proceed with a caveat rather than fake it, but you lose the validation.
+
+**It's a large prompt: ~12k tokens when it fires.** In Claude Code and on claude.ai only
+the ~370-token description sits in context; the full instructions load only when the skill
+actually triggers. Pasted into a system prompt elsewhere, there's no such gating — you pay
+the full ~12k on every single turn, whether or not you're repurposing anything. Load it
+into a dedicated project or conversation rather than your global instructions.
+
 ## Repo layout
 
 ```
