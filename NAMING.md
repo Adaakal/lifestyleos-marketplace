@@ -54,22 +54,41 @@ No new repo, no new marketplace, no new URL to hand out.
 ## After editing any plugin source
 
 Installed plugins run from a **snapshot copy** in
-`~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/`, not from these folders.
-Editing a file here changes nothing until you refresh that cache:
+`~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/`, not from the folder you edit.
+An edit changes nothing that Claude Code runs until you refresh that cache.
+
+**`lifestyleos-marketplace` resolves from GitHub**, so a local edit is invisible until it
+is pushed:
 
 ```
-claude plugin uninstall <plugin>@<marketplace>
-claude plugin install   <plugin>@<marketplace>
+git add -A && git commit -m "..." && git push
+claude plugin marketplace update lifestyleos-marketplace
+claude plugin uninstall content-repurposer@lifestyleos-marketplace
+claude plugin install   content-repurposer@lifestyleos-marketplace
+```
+
+**`lifestyleos-personal` resolves from a local directory**, so no push is needed — but the
+cache still has to be refreshed:
+
+```
+claude plugin uninstall lifestyleos-content@lifestyleos-personal
+claude plugin install   lifestyleos-content@lifestyleos-personal
 ```
 
 Bump `version` in `plugin.json` when the content meaningfully changes, so the cache
-directory name tells you which snapshot is live.
+directory name tells you which snapshot is live. Verify a refresh actually landed:
 
-## If these folders ever move
+```
+diff -rq ~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/ <source-folder>/
+```
 
-Directory marketplaces are registered by **absolute path**. Moving a folder leaves a
-dangling pointer that fails silently — the installed plugin keeps running from cache while
-updates stop working. After any move:
+Silence means they match. This check exists because a stale cache fails silently — the old
+snapshot just keeps running.
+
+## If a local folder ever moves
+
+Directory marketplaces are registered by **absolute path**. Moving the folder leaves a
+dangling pointer that fails silently. After any move:
 
 ```
 claude plugin marketplace remove <name>
