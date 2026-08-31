@@ -8,13 +8,15 @@ description: >
   "turn this into a content package". Works in claude.ai chat, Cowork, Code, and the Chrome
   extension. Each clip ships a master block plus paste-ready native copy for TikTok, Instagram
   Reels, YouTube Shorts, LinkedIn, Substack, and beehiiv, with SEO keywords, an AEO question and
-  40-60w answer, and a GEO quotable. Timed clips also ship an edit decision list separating source
+  40-60w answer, and a GEO quotable, all drafted to each platform's current ranking signals (IG
+  send-triggers, TikTok SEO, YouTube A/B thumbnails, Substack native-video paywall previews).
+  Timed clips also ship an edit decision list separating source
   from output timecodes, so edit notes survive recuts. Long sources are shortlisted first —
   every standalone moment listed with its timecodes and hook — then packaged on request, one
   clip at a time, so nothing truncates and no research is spent on clips you won't post.
 metadata:
   author: Adaugo Akaluso
-  version: '1.1.0'
+  version: '1.2.0'
   license: MIT
 ---
 
@@ -151,6 +153,12 @@ A long recording usually contains several standalone posts. Your job is to find 
 - It has a clean hook in the first ~3 seconds and a payoff by the end.
 - It maps to one of your content pillars.
 - It contains a quotable, liftable line (that becomes the GEO quotable).
+- It has a **share trigger** — a line that makes a viewer forward it to a *specific person*
+  ("this is so us" / "you need this"). Sends-per-reach is Instagram's most-weighted ranking
+  signal, and share-worthy moments travel on every platform.
+- Bonus: it has **save-worthiness** — reference value a cold stranger would keep (a
+  checklist, a named tool, a step-by-step). Non-follower saves break content out of
+  follower-only distribution.
 
 **Propose, don't overreach.** When you have a timed source, propose in/out timecodes and a suggested MP4 filename. When you don't (text draft, rough idea), skip timecodes/filename/edit-notes entirely rather than inventing them — never fabricate a timecode you can't see.
 
@@ -301,6 +309,24 @@ Strong SEO is the foundation; AEO and GEO are layers on top, not substitutes.
 
 **Platform quirks worth knowing** (verify currency with a web search if a specific tactic's staying power matters): Google AI Overviews and Perplexity favor freshness plus demonstrated authority; LinkedIn leans on author/entity credibility over keyword density; evidence density (expert framing, concrete numbers, inline source attribution) measurably lifts generative-engine citation odds. Because search/AI-answer behavior shifts monthly, treat specific platform tactics as perishable — validate with a quick web search before treating any single tactic as evergreen, and never fabricate a platform behavior you haven't verified.
 
+## Platform Algorithm Priorities — the ranking signals each block drafts to
+
+Each platform's feed has one or two signals that dominate distribution right now. Draft
+every Part B block *to its platform's signal*, not to a generic "engagement" idea. Digest
+(researched Aug 2026 — perishable, rule 10 applies):
+
+| Platform | Optimize for | In practice |
+|---|---|---|
+| Instagram | **Sends per reach** (≈15× a like), non-follower saves, speech-driven retention | Name the send trigger; speak the keywords aloud; 3–5 hashtags max — caption keywords + Topic do the targeting; raw talking-head beats polish |
+| TikTok | Watch time (1–10min boosted, sub-15s suppressed), search intent, interactivity | Favor the longer cut; spoken search phrase in the hook; stitch/duet/reply CTAs; offer a Photo Mode carousel when the idea is a list |
+| YouTube | Satisfaction + return viewers, atypical CTR, serialization | 2 thumbnail options for native A/B; name the series/playlist; hook inside 3s, zero intro |
+| Substack | Native video + free→paid conversion (their 10% cut = their incentive) | Video at the top of the post, uploaded natively; 60–90s captioned clip for the vertical feed; 2–3min paid preview ending right before the payoff |
+
+The full playbook — including Substack's one-time publication setup and the durable
+cross-platform through-lines — lives in `references/platform-algorithms-2026.md`. Read it
+when drafting Part B for a platform you haven't drafted this session, or when advising
+the user on platform strategy.
+
 ## Deep Research Protocol
 
 When factual claims are detected, validate BEFORE writing any final copy for that clip.
@@ -380,19 +406,33 @@ Draft real, paste-ready copy per platform — not a "fit" verdict. Where a platf
 
 ```
 TikTok
-• Spoken hook:  [Where to start the audio / the first spoken line]
+• Spoken hook:  [Where to start the audio / the first spoken line — put the target search
+                 phrase IN the spoken words; TikTok indexes speech]
+• Length call:  [Which cut to post — favor the 60s+ cut when the content supports it
+                 (1–10min is boosted, sub-15s suppressed); note serial potential
+                 ("natural part 1 of 3")]
 • Caption:      [Native TikTok caption — short, punchy, one keyword-rich line + question]
-• CTA:          [Comment/duet/save prompt]
+• CTA:          [Interactive: stitch/duet bait, reply-to-comment prompt, or debate question —
+                 not just "follow for more"]
 • Hashtags:     [4–6 tags, TikTok-native mix]
 • Audio:        [Original voice / trending sound guidance]
 • Pacing:       [Hard cuts / where to cut for retention]
+• Carousel alt: [Only if the idea works as slides (checklist/framework): Photo Mode
+                 slide-by-slide outline — carousels often out-reach video]
 
 Instagram Reels
-• Hook (line 1):[The first line of the caption — must earn the tap-more]
+• Send trigger: [The line/moment that makes a viewer DM this to a specific person —
+                 sends-per-reach is IG's #1 ranking signal (~15× a like)]
+• Hook (line 1):[The first line of the caption — must earn the tap-more. On video: a human
+                 speaking within the first 1.5s]
 • Caption:      [Full IG caption — value-dense, mobile-readable, stats visible,
-                 ends with an engagement question]
-• CTA:          [Comment keyword / save prompt]
-• Hashtags:     [8–12 tags, broad → niche → brand]
+                 ends with an engagement question. Keyword-rich: the caption, spoken audio,
+                 and alt text do the SEO work hashtags used to]
+• Spoken keywords:[The 2–3 phrases that must be SAID aloud so auto-captions index them]
+• Topic:        [The "Add Topic" selection before publishing]
+• CTA:          [Comment keyword / save prompt — save-worthiness from non-followers breaks
+                 follower-only reach]
+• Hashtags:     [3–5 tags max — hashtags are functionally decorative now]
 • Alt text:     [Accessibility + SEO description of the frame]
 • Cover:        [Cover text overlay]
 
@@ -400,8 +440,10 @@ YouTube Shorts
 • Shorts title: [≤~60 char, keyword-front-loaded]
 • Description:  [1–2 lines + #Shorts + primary keyword]
 • Hashtags:     [#Shorts + 2–4 topical]
-• Pinned comment:[Engagement prompt]
-• Thumbnail text:[If applicable]
+• Series:       [Which playlist/series this joins — serialization + return viewers drive
+                 homepage impressions]
+• Pinned comment:[Engagement prompt, or link to the next video in the series]
+• Thumbnail text:[TWO options, for native A/B testing]
 
 LinkedIn
 • First lines:  [Two lines that survive the "see more" fold — hook + reframe]
@@ -409,15 +451,25 @@ LinkedIn
 • Soft CTA:     [A question that invites a peer reply]
 • Hashtags:     [3–5 professional tags]
 
-Substack
+Substack  (video-first — Substack reads the FIRST asset in the post to decide how it
+           surfaces in the app's media tabs and vertical feed)
+• Video placement:[Native upload (.mp4/.mov, high bitrate) at the absolute TOP of the post —
+                 never a YouTube embed; embeds are deprioritized in discovery]
+• Feed clip (60–90s):[Which moment to cut with Substack's native clipper for the vertical
+                 discovery feed — auto-captions ON (audio-off viewing is the default).
+                 Usually the same cut as the TikTok/Reels EDL — say so when true]
+• Thumbnail (16:9):[1920×1080 custom thumbnail — text + framing direction, high-contrast and
+                 couch-readable (TV app) — never the auto freeze-frame]
 • Subject:      [Email subject line]
 • Preview:      [Inbox preview text]
 • Title:        [Post title]
 • Opening:      [First paragraph — answer-first, sets up the piece]
-• Outline:      [H2 · H2 · H2 section skeleton]
+• Body/outline: [H2 · H2 · H2 skeleton — treat the body like a YouTube description:
+                 bullets + clear keywords; Substack's internal search indexes it]
 • Pull quote:   ["[The line to feature]"]
-• CTA:          [Reply prompt / subscribe ask]
-• Embed:        [Which clip to embed as the teaser]
+• Paywall:      [Free, or Paid w/ 2–3min free preview — preview must end RIGHT BEFORE the
+                 biggest payoff (the app prompts upgrade mid-watch). Name the cutoff moment]
+• CTA:          [Reply prompt / subscribe ask / Chat-Live tie-in for paid subscribers]
 
 beehiiv
 • Subject:      [Email subject line]
@@ -498,6 +550,7 @@ Every field is engineered for performance and for being *found*:
 9. **SEO/AEO/GEO applied, not bolted on** — answer-first framing, evidence density, and topical consistency run through every field.
 10. **Verify perishable platform tactics** — confirm any "Platform X currently favors Y" claim with a quick web search rather than trusting stale knowledge.
 11. **Flag weak content** — if a clip's core idea is thin, say so and suggest a stronger cut or an expansion.
+12. **Draft to each platform's current ranking signal** — send-triggers and spoken keywords on IG, search phrases in TikTok speech, A/B thumbnails and series on YouTube, native-video-first with a cliffhanger paywall on Substack. The digest lives in Platform Algorithm Priorities; the full playbook in `references/platform-algorithms-2026.md`. All of it is perishable — rule 10 applies to every tactic in it.
 
 ## Edge Cases
 
