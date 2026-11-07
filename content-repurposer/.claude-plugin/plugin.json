@@ -1,7 +1,7 @@
 {
   "name": "content-repurposer",
-  "description": "Reverse-engineers videos, transcripts, and drafts into research-validated, platform-ready clip packages \u2014 paste-ready native copy for TikTok, Reels, Shorts, LinkedIn, Substack, and beehiiv, with SEO/AEO/GEO optimization and recut-safe timecodes.",
-  "version": "1.2.0",
+  "description": "Reverse-engineers videos, transcripts, and drafts into research-validated, platform-ready clip packages, then cuts the MP4s from the package's EDL and builds standalone-slide Canva carousels. Paste-ready native copy for TikTok, Reels, Shorts, LinkedIn, Substack, and beehiiv.",
+  "version": "1.3.0",
   "author": {
     "name": "Adaugo Akaluso"
   },

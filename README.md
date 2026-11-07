@@ -28,10 +28,15 @@ optimization and recut-safe timecodes.
 - **Deep research validation** — fact-checks stats, studies, and product/tech claims before writing copy.
 - **Recut-safe timecodes** — every timed clip ships an edit decision list (EDL) that separates *source* time from *output* time, so edit notes survive recuts. Includes an offline **Clip Re-Timer** calculator (`content-repurposer/skills/content-reverse-engineer/assets/clip-retimer.html`).
 
+- **Clip Cutter** — renders the package's EDL into a finished MP4. Stitches a recording uploaded in parts, snaps cut points to silence edges, recomputes the overlay map from the real cut, and can burn overlays in for LinkedIn and Substack. Ships `clipcut.py` (needs ffmpeg).
+- **Carousel Builder** — builds a 6-slide-max carousel in your Canva template where every slide stands alone, with the hook slide always built answer-first. Needs the Canva connector.
+
 Invoke it directly:
 
 ```
 /content-repurposer:content-reverse-engineer
+/content-repurposer:clip-cutter
+/content-repurposer:carousel-builder
 ```
 
 Or just describe a piece of content ("reverse engineer this video into posts: <url>") and it triggers on its own.
@@ -44,6 +49,8 @@ marked spots:
 1. **Your Content Pillars** — the themes you post about, used to decide which clips are worth cutting and how to tag them.
 2. **Your Voice** — how your copy should sound, so drafts come out in your voice.
 3. **Content-database fields** (optional) — match the sync block to your own Notion/Airtable/sheet if you run a content pipeline.
+
+Clip Cutter has one spot (your burn-in box color and font) and Carousel Builder has two (your Canva template ID and your byline), each marked `CUSTOMIZE THIS`.
 
 ## Using it outside Claude Code
 
@@ -89,7 +96,10 @@ lifestyleos-marketplace/
 ├── .claude-plugin/marketplace.json   ← the marketplace manifest
 ├── content-repurposer/               ← a plugin
 │   ├── .claude-plugin/plugin.json
-│   └── skills/content-reverse-engineer/
+│   └── skills/
+│       ├── content-reverse-engineer/
+│       ├── clip-cutter/              ← SKILL.md + scripts/clipcut.py
+│       └── carousel-builder/
 ├── artifacts/                        ← shared non-plugin assets
 ├── NAMING.md                         ← naming conventions
 └── LICENSE

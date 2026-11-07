@@ -8,7 +8,7 @@
     {
       "name": "content-repurposer",
       "source": "./content-repurposer",
-      "description": "Turn one recording into a stack of research-validated, platform-ready clip packages."
+      "description": "Turn one recording into research-validated clip packages, rendered cuts, and carousels."
     }
   ]
 }
