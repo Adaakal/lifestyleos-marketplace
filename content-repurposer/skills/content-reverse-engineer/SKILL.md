@@ -16,19 +16,30 @@ description: >
   clip at a time, so nothing truncates and no research is spent on clips you won't post.
 metadata:
   author: Adaugo Akaluso
-  version: '1.2.0'
+  version: '1.4.0'
   license: MIT
 ---
 
 <!--
-  ┌─────────────────────────────────────────────────────────────────────┐
-  │  CUSTOMIZE THIS TEMPLATE — 3 spots make it yours:                     │
-  │  1. "Your Content Pillars" (First Use section) — define your niches.  │
-  │  2. "Your Voice" (bottom) — describe how your copy should sound.      │
-  │  3. Content-database fields (Sync section) — match your own tool.     │
-  │  Everything else is a general-purpose repurposing engine.             │
-  └─────────────────────────────────────────────────────────────────────┘
+  SETUP: this skill reads three values the user fills in once.
+  1. Content pillars (required)   2. Voice (optional)   3. Content database (optional)
+  In Claude Code they come from the plugin's setup form. Anywhere else, the skill asks.
+  Everything else is a general-purpose repurposing engine.
 -->
+
+## ⚙️ Setup check (run before any work)
+
+This skill needs a few details from the person using it. Their saved answers appear in the "Your ..." sections below.
+
+A value is **missing** when it is empty, or when it still shows a raw `${user_config...}` token (that happens outside Claude Code, where the setup form does not exist). A "My setup (content-repurposer)" block in the conversation or project instructions counts as the saved answers and fills any missing value.
+
+Before doing the work:
+1. Look at the values this skill marks **required** (content pillars). If any is missing, stop and ask for all the missing ones in a single message, in plain words, with one example each. Do not guess and do not invent a value.
+2. Values marked **optional** fall back to the stated default. Mention once which defaults are in use.
+3. Use the answers for the rest of the conversation, then tell the person how to save them so they are not asked again:
+   - **Claude Code:** run `/config`, find this plugin's rows, and fill them in. `/content-repurposer:setup` walks through it.
+   - **claude.ai or the desktop app:** paste the filled "My setup" block from `/setup` into the project instructions, or into the matching "Your ..." section of this skill before uploading it.
+
 
 ## 🚫 GLOBAL CONTENT RULE — Positive Positioning Only (applies to EVERY output)
 
@@ -104,17 +115,15 @@ If something you need is missing, request it before proceeding.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-### ⚙️ Your Content Pillars — CUSTOMIZE THIS
+### ⚙️ Your Content Pillars (required)
 
-Pillars are the themes you post about consistently. The skill uses them to (a) decide which clips are worth cutting and (b) tag each package so platforms learn what you're the go-to on. Replace the placeholders below with your own — keep 3–6, each with a short code:
+Pillars are the themes the creator posts about consistently. The skill uses them to (a) decide which clips are worth cutting and (b) tag each package so platforms learn what they're the go-to on.
 
 ```
-🔹 Pillar One   (CODE_1)   — [what this covers]
-🔹 Pillar Two   (CODE_2)   — [what this covers]
-🔹 Pillar Three (CODE_3)   — [what this covers]
-🔹 Pillar Four  (CODE_4)   — [what this covers]
-🔹 Pillar Five  (CODE_5)   — [what this covers]
+${user_config.content_pillars}
 ```
+
+If that block is missing (see Setup check), ask: "What 3 to 6 themes do you post about? For example: home cooking, budget travel, small business money." Give each pillar a short code (first letters, caps) for tagging.
 
 Platforms this skill drafts for:
 ```
@@ -482,7 +491,7 @@ beehiiv
 
 ## Part C — Content-Database Sync Block (optional)
 
-Only relevant if you connect a content database (Notion, Airtable, a spreadsheet). Match these generic fields to your own schema.
+Only relevant if a content database is set. The creator's database: `${user_config.content_database}`. If that is missing, skip this part without asking. If it is set, read the database's real field names first and match these generic fields to them.
 
 ```
 DATABASE UPDATE — Ready to Sync (empty fields only)
@@ -593,8 +602,14 @@ What I need from you (if anything):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-## ⚙️ Your Voice — CUSTOMIZE THIS
+## ⚙️ Your Voice (optional)
 
-Describe how your copy should sound so drafts come out in your voice instead of generic-creator default. Replace this block with your own voice notes — tone, signature phrases, what to avoid, reading level, emoji policy, etc.
+How the creator's copy should sound, in their own words:
 
-Default (until you customize): fast, research-rigorous, and strategically opinionated. Don't ask unnecessary questions — find the sharpest cuts, make strong data-backed recommendations, and show the optimization reasoning. When content has factual claims, validate them before publishing. When raw material is rough, find the strongest signal and build something that performs. This is not a transcription service or a caption generator — it's the intelligence layer that turns one recording into a stack of accurate, optimized, paste-ready posts engineered to attract the audience and opportunities you're building toward.
+```
+${user_config.voice_notes}
+```
+
+If that block is missing, use the default below and say once that the default voice is in use, with the offer to describe their own (tone, phrases they use, words to avoid, emoji policy).
+
+Default voice: fast, research-rigorous, and strategically opinionated. Don't ask unnecessary questions. Find the sharpest cuts, make strong data-backed recommendations, and show the optimization reasoning. When content has factual claims, validate them before publishing. When raw material is rough, find the strongest signal and build something that performs. This is not a transcription service or a caption generator. It is the layer that turns one recording into a stack of accurate, optimized, paste-ready posts.

@@ -37,20 +37,29 @@ Invoke it directly:
 /content-repurposer:content-reverse-engineer
 /content-repurposer:clip-cutter
 /content-repurposer:carousel-builder
+/content-repurposer:setup
 ```
 
 Or just describe a piece of content ("reverse engineer this video into posts: <url>") and it triggers on its own.
 
-**This plugin is a generic, customizable template.** It ships with placeholder content
-pillars and a default voice; you plug in your own. Open
-`content-repurposer/skills/content-reverse-engineer/SKILL.md` and edit the three clearly
-marked spots:
+**It asks for what it needs.** Nothing in the skills is hard-coded to one creator, and you
+never have to open a file to make it yours.
 
-1. **Your Content Pillars** — the themes you post about, used to decide which clips are worth cutting and how to tag them.
-2. **Your Voice** — how your copy should sound, so drafts come out in your voice.
-3. **Content-database fields** (optional) — match the sync block to your own Notion/Airtable/sheet if you run a content pipeline.
+- **In Claude Code,** enabling the plugin opens a short form: your name, your content
+  pillars, your voice, and (only if you use them) a Canva carousel template, a burn-in box
+  color and font, and a content database. Change any of them later with `/config`.
+- **Anywhere else,** run `/content-repurposer:setup` or just start using a skill. If a
+  required detail is missing it asks once, in plain words, then hands you a filled
+  "My setup" block to paste into your project instructions so it never asks again.
 
-Clip Cutter has one spot (your burn-in box color and font) and Carousel Builder has two (your Canva template ID and your byline), each marked `CUSTOMIZE THIS`.
+| Detail | Required? | Used by |
+|---|---|---|
+| Your name | Yes | Carousel byline |
+| Content pillars | Yes | Choosing and tagging clips |
+| Voice | No, a default voice ships | Every caption and post |
+| Canva carousel template | Only for carousels | Carousel Builder |
+| Burn-in box color and font | No, a neutral default ships | Clip Cutter |
+| Content database | No | Optional sync |
 
 ## Using it outside Claude Code
 
@@ -99,7 +108,8 @@ lifestyleos-marketplace/
 │   └── skills/
 │       ├── content-reverse-engineer/
 │       ├── clip-cutter/              ← SKILL.md + scripts/clipcut.py
-│       └── carousel-builder/
+│       ├── carousel-builder/
+│       └── setup/                    ← first-run questions
 ├── artifacts/                        ← shared non-plugin assets
 ├── NAMING.md                         ← naming conventions
 └── LICENSE

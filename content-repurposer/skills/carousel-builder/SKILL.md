@@ -5,16 +5,30 @@ license: MIT
 ---
 
 <!--
-  CUSTOMIZE THIS SKILL: 2 spots make it yours.
-  1. "Your Template": the Canva design ID and its element map.
-  2. "Your Byline": the name that goes on the last slide.
-  Voice rules come from content-reverse-engineer's "Your Voice" section.
+  SETUP: this skill reads two values the user fills in once.
+  1. Canva carousel template (required)   2. Name for the byline (required)
+  Voice comes from content-reverse-engineer's "Your Voice" section.
   Requires the Canva connector.
 -->
 
 # Carousel Builder
 
 Turns one piece of content into a finished carousel in a Canva template. Runs on its own, or right after content-reverse-engineer has packaged a source, using that package's validated research. Never add a claim the package did not already validate. If a slide needs a new fact, check it first.
+
+## ⚙️ Setup check (run before any work)
+
+This skill needs a few details from the person using it. Their saved answers appear in the "Your ..." sections below.
+
+A value is **missing** when it is empty, or when it still shows a raw `${user_config...}` token (that happens outside Claude Code, where the setup form does not exist). A "My setup (content-repurposer)" block in the conversation or project instructions counts as the saved answers and fills any missing value.
+
+Before doing the work:
+1. Look at the values this skill marks **required** (Canva template, byline name). If any is missing, stop and ask for all the missing ones in a single message, in plain words, with one example each. Do not guess and do not invent a value.
+2. Values marked **optional** fall back to the stated default. Mention once which defaults are in use.
+3. Use the answers for the rest of the conversation, then tell the person how to save them so they are not asked again:
+   - **Claude Code:** run `/config`, find this plugin's rows, and fill them in. `/content-repurposer:setup` walks through it.
+   - **claude.ai or the desktop app:** paste the filled "My setup" block from `/setup` into the project instructions, or into the matching "Your ..." section of this skill before uploading it.
+
+If the Canva connector is not connected, say so first. Nothing below works without it.
 
 ## The three non-negotiables
 
@@ -35,13 +49,15 @@ If any answer is no, rewrite the body, not the title.
 
 Slide copy follows the "Your Voice" section of content-reverse-engineer, plus the positive positioning rule. Sentence case unless the template's style renders caps.
 
-## ⚙️ Your Template — CUSTOMIZE THIS
+## ⚙️ Your Template (required)
 
-Set your Canva design ID here: `<YOUR_CANVA_DESIGN_ID>`, 1080x1350.
+Canva design to build from: `${user_config.canva_template_id}`, 1080x1350.
+
+If that is missing, ask: "Which Canva design should I build your carousels from? Paste its link." Any 1080x1350 design with a hook page and content pages works.
 
 **Always copy it first** with `copy-design`, then edit the copy. Never edit the original. Rename the copy `Carousel: <topic> (<platform>, <month year>)`.
 
-The element map below is a worked example from a common minimalist carousel layout (a light ground, one ink color, a mix of light, display-caps and script type). Replace the template text and limits with what `read-design` shows for your own design.
+The element map below is a worked example from a common minimalist carousel layout (a light ground, one ink color, a mix of light, display-caps and script type). Do not assume it matches. Run `read-design` on the creator's design and use the element map and limits it shows.
 
 ### Page 1, hook slide (example element map)
 | Role | Template text | Limit that fits |
@@ -61,9 +77,11 @@ Read together, lines 1 to 4 plus the pill form the hook sentence. Example shape:
 - **Body** (light, centered): up to 4 lines, about 38 to 40 characters per line, written with manual line breaks. Keep the last line short enough to clear any arrow button, and keep it above the bottom rule.
 - Last slide: remove the swipe arrow, then add a small line for the byline and sources (`add_text`, then `format_text` in the ink color, small and centered).
 
-## ⚙️ Your Byline — CUSTOMIZE THIS
+## ⚙️ Your Byline (required)
 
-Name on the last slide: `<YOUR NAME>`.
+Name on the last slide: `${user_config.creator_name}`.
+
+If that is missing, ask what name goes on their content.
 
 ## Canva build steps
 

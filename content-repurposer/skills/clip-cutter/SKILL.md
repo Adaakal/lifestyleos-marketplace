@@ -5,9 +5,8 @@ license: MIT
 ---
 
 <!--
-  CUSTOMIZE THIS SKILL: 1 spot makes it yours.
-  "Your Burn-In Style" (below) sets the overlay box color and font for burned-in text.
-  Everything else is a general-purpose cutting engine.
+  SETUP: nothing required. Two optional values set the look of burned-in text:
+  box color and font. Everything else is a general-purpose cutting engine.
 -->
 
 # Clip Cutter
@@ -61,9 +60,12 @@ Requires `ffmpeg` and `ffprobe` (6.x tested) and Python 3.
 - If a part fails to upload, ask for that part again rather than cutting around the gap.
 - Report one decided result, not a menu of renders. Follow the voice rules in content-reverse-engineer's "Your Voice" section for any copy in the reply.
 
-## ⚙️ Your Burn-In Style — CUSTOMIZE THIS
+## ⚙️ Your Burn-In Style (optional)
 
-Default: white text on a black box at 75% opacity (`--box 0x000000@0.75`), centered, lower third, DejaVu Sans if no brand font is on disk (`fc-list | grep -i dejavu`). Replace with your brand box color (`--box 0xRRGGBB@0.85`) and a font path (`--font /path/to/font.ttf`). Ask before installing any new font.
+- Box color: `${user_config.burn_box_color}`
+- Font file: `${user_config.burn_font}`
+
+A "My setup (content-repurposer)" block in the conversation or project instructions also counts as the saved answers. Pass the values to the script as `--box` and `--font`. If either is empty or still shows a raw `${user_config...}` token, use the default for that one without asking: white text on a black box at 75% opacity (`--box 0x000000@0.75`), centered, lower third, DejaVu Sans (`fc-list | grep -i dejavu`). Say once that the default look is in use and that a brand color and font can be set in the plugin's setup. Ask before installing any new font.
 
 ## The script
 
