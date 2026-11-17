@@ -35,8 +35,8 @@ A value is missing when it is empty or still shows a raw `${user_config...}` tok
 
 Answers only last for this conversation unless they are saved. End by telling the person the one that applies to them:
 
+- **Claude app (claude.ai or desktop):** paste the "My setup" block into the Project's instructions. The skills in this plugin read it from there.
 - **Claude Code:** run `/config` and fill in the content-repurposer rows with the values below. They also appear in the form shown when the plugin is enabled.
-- **claude.ai or the desktop app:** paste the "My setup" block into the project's instructions. The skills in this plugin read it from there.
 
 Always finish with the filled block, copy-ready:
 

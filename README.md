@@ -1,16 +1,38 @@
 # LifestyleOS Marketplace
 
-A Claude Code marketplace of content and lifestyle-operations plugins — tools for turning
-raw material into research-validated, platform-ready output.
+Content and lifestyle-operations skills for Claude. They turn raw material into
+research-validated, platform-ready output, and they ask you for what they need the first
+time you use them.
 
 ## Install
 
-In Claude Code:
+### In the Claude app (claude.ai or desktop). Start here.
+
+No code and no terminal.
+
+1. Download the skill you want from the [`downloads/`](downloads/) folder. Each one is a
+   ready-to-upload ZIP. Start with `content-reverse-engineer.zip`.
+2. In Claude, open **Customize > Skills**, click **+**, then **Create skill**, then
+   **Upload a skill**, and pick the ZIP.
+3. Start a chat and hand it something: "reverse engineer this video into posts" with a
+   link, a transcript or a file.
+
+The first time it runs, the skill asks for the few details it needs (your content pillars,
+and your voice if you want one). It then gives you a filled "My setup" block. Paste that
+into a Project's instructions and it won't ask again.
+
+Add `clip-cutter.zip` if you want finished MP4s, `carousel-builder.zip` if you make
+carousels in Canva, and `setup.zip` if you'd like one guided walkthrough of every detail.
+
+### In Claude Code
 
 ```
 /plugin marketplace add https://github.com/Adaakal/lifestyleos-marketplace
 /plugin install content-repurposer@lifestyleos-marketplace
 ```
+
+Enabling the plugin opens a short form for the same details. Change them later with
+`/config`.
 
 ## Plugins
 
@@ -31,7 +53,9 @@ optimization and recut-safe timecodes.
 - **Clip Cutter** — renders the package's EDL into a finished MP4. Stitches a recording uploaded in parts, snaps cut points to silence edges, recomputes the overlay map from the real cut, and can burn overlays in for LinkedIn and Substack. Ships `clipcut.py` (needs ffmpeg).
 - **Carousel Builder** — builds a 6-slide-max carousel in your Canva template where every slide stands alone, with the hook slide always built answer-first. Needs the Canva connector.
 
-Invoke it directly:
+In the Claude app, just describe what you have ("reverse engineer this video into posts:
+<url>", "cut clip 2", "make this a carousel") and the right skill picks it up. In Claude
+Code you can also call each one by name:
 
 ```
 /content-repurposer:content-reverse-engineer
@@ -40,17 +64,16 @@ Invoke it directly:
 /content-repurposer:setup
 ```
 
-Or just describe a piece of content ("reverse engineer this video into posts: <url>") and it triggers on its own.
-
 **It asks for what it needs.** Nothing in the skills is hard-coded to one creator, and you
 never have to open a file to make it yours.
 
+- **In the Claude app,** just start using a skill. If a required detail is missing it asks
+  once, in plain words, then hands you a filled "My setup" block to paste into your
+  Project instructions so it never asks again. Saying "set up content repurposer" runs the
+  full walkthrough if you uploaded the setup skill.
 - **In Claude Code,** enabling the plugin opens a short form: your name, your content
   pillars, your voice, and (only if you use them) a Canva carousel template, a burn-in box
   color and font, and a content database. Change any of them later with `/config`.
-- **Anywhere else,** run `/content-repurposer:setup` or just start using a skill. If a
-  required detail is missing it asks once, in plain words, then hands you a filled
-  "My setup" block to paste into your project instructions so it never asks again.
 
 | Detail | Required? | Used by |
 |---|---|---|
@@ -61,26 +84,17 @@ never have to open a file to make it yours.
 | Burn-in box color and font | No, a neutral default ships | Clip Cutter |
 | Content database | No | Optional sync |
 
-## Using it outside Claude Code
+## Using it without Claude
 
-The packaging here is Claude Code's — `.claude-plugin/`, `marketplace.json`, and
-`/plugin marketplace add` are its format, and no other tool reads them. The *payload* is
-not: `SKILL.md` is ~5,200 words of plain-English instructions with no Claude-specific
-syntax in the body, and the Clip Re-Timer is a standalone HTML file that needs no AI tool
-at all.
+The skills are plain-English instructions, and the Clip Re-Timer is a standalone HTML file
+that needs no AI tool at all.
 
-Three ways to use it without installing the plugin:
-
-**1. claude.ai or the Claude desktop app.** Upload `content-repurposer/skills/content-reverse-engineer/`
-(SKILL.md plus its `assets/` folder) as a skill under Settings → Capabilities → Skills. It
-loads on demand there the same way it does in Claude Code.
-
-**2. Any other LLM.** Paste the body of `SKILL.md` — everything below the YAML
+**Any other LLM.** Paste the body of `SKILL.md` — everything below the YAML
 frontmatter — into a system prompt, a project's custom knowledge, or an uploaded file. The
 frontmatter is a Claude-specific trigger mechanism and can be dropped. The
 `## Universal Access Contexts` section is also Claude-specific and safe to delete.
 
-**3. The Clip Re-Timer alone.** Open
+**The Clip Re-Timer alone.** Open
 `content-repurposer/skills/content-reverse-engineer/assets/clip-retimer.html` in any
 browser. It is fully offline and makes no network requests. If all you want is edit notes
 that survive a recut, you never have to touch an AI tool.
@@ -110,6 +124,8 @@ lifestyleos-marketplace/
 │       ├── clip-cutter/              ← SKILL.md + scripts/clipcut.py
 │       ├── carousel-builder/
 │       └── setup/                    ← first-run questions
+├── downloads/                        ← ready-to-upload skill ZIPs for the Claude app
+├── scripts/build-zips.sh             ← rebuilds downloads/ from the skill folders
 ├── artifacts/                        ← shared non-plugin assets
 ├── NAMING.md                         ← naming conventions
 └── LICENSE

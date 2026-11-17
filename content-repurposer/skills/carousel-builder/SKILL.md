@@ -25,8 +25,8 @@ Before doing the work:
 1. Look at the values this skill marks **required** (Canva template, byline name). If any is missing, stop and ask for all the missing ones in a single message, in plain words, with one example each. Do not guess and do not invent a value.
 2. Values marked **optional** fall back to the stated default. Mention once which defaults are in use.
 3. Use the answers for the rest of the conversation, then tell the person how to save them so they are not asked again:
+   - **Claude app (claude.ai or desktop):** give them a filled "My setup (content-repurposer)" block, copy-ready, and tell them to paste it into their Project instructions.
    - **Claude Code:** run `/config`, find this plugin's rows, and fill them in. `/content-repurposer:setup` walks through it.
-   - **claude.ai or the desktop app:** paste the filled "My setup" block from `/setup` into the project instructions, or into the matching "Your ..." section of this skill before uploading it.
 
 If the Canva connector is not connected, say so first. Nothing below works without it.
 
