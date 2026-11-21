@@ -10,19 +10,22 @@ time you use them.
 
 No code and no terminal.
 
-1. Download the skill you want from the [`downloads/`](downloads/) folder. Each one is a
-   ready-to-upload ZIP. Start with `content-reverse-engineer.zip`.
-2. In Claude, open **Customize > Skills**, click **+**, then **Create skill**, then
-   **Upload a skill**, and pick the ZIP.
-3. Start a chat and hand it something: "reverse engineer this video into posts" with a
+1. In Claude, open **Plugins** in the left sidebar.
+2. Click **Add**, then **Add marketplace**, then **Add from a repository**.
+3. Type `Adaakal/lifestyleos-marketplace`, pick it from the list, and click **Sync**.
+4. Open **Content Repurposer (Marketplace)** in the list and click **Add**.
+5. Start a chat and hand it something: "reverse engineer this video into posts" with a
    link, a transcript or a file.
 
 The first time it runs, the skill asks for the few details it needs (your content pillars,
 and your voice if you want one). It then gives you a filled "My setup" block. Paste that
 into a Project's instructions and it won't ask again.
 
-Add `clip-cutter.zip` if you want finished MP4s, `carousel-builder.zip` if you make
-carousels in Canva, and `setup.zip` if you'd like one guided walkthrough of every detail.
+Every plugin from this repo is listed with **(Marketplace)** in its name, so you can tell
+it apart from anything of your own with a similar name.
+
+Prefer single skills? The [`downloads/`](downloads/) folder has one ZIP per skill that you
+can upload on its own.
 
 ### In Claude Code
 

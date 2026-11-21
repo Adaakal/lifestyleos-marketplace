@@ -42,11 +42,29 @@ Hence:
 | Shared | `lifestyleos-marketplace` | `SKILLs_Marketplace/lifestyleos-marketplace` |
 | Personal | `lifestyleos-personal` | `SKILLs/lifestyleos-personal` |
 
+## Listing name: every shared plugin says "Marketplace"
+
+The Claude app can now sync this repo as a marketplace (Plugins, Add, Add marketplace, Add
+from a repository), and it lists each plugin by its display name. So every shared plugin
+sets `displayName` to `<Plugin Name> (Marketplace)` in two places:
+
+- its own `.claude-plugin/plugin.json`
+- its entry in `.claude-plugin/marketplace.json` (this one wins when they differ)
+
+```
+"name": "content-repurposer",
+"displayName": "Content Repurposer (Marketplace)",
+```
+
+`name` stays clean. It is the install ID and the skill prefix, so changing it would break
+`/plugin install content-repurposer@lifestyleos-marketplace` for anyone who already has it.
+Personal plugins never carry the word.
+
 ## Adding a new shared plugin
 
 1. Create `SKILLs_Marketplace/lifestyleos-marketplace/<plugin-name>/`
-2. Add `.claude-plugin/plugin.json` inside it
-3. Add one entry to `.claude-plugin/marketplace.json`
+2. Add `.claude-plugin/plugin.json` inside it, with a `displayName` ending in `(Marketplace)`
+3. Add one entry to `.claude-plugin/marketplace.json`, with the same `displayName`
 4. `claude plugin install <plugin-name>@lifestyleos-marketplace`
 
 No new repo, no new marketplace, no new URL to hand out.

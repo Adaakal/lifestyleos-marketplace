@@ -7,6 +7,7 @@
   "plugins": [
     {
       "name": "content-repurposer",
+      "displayName": "Content Repurposer (Marketplace)",
       "source": "./content-repurposer",
       "description": "Turn one recording into research-validated clip packages, rendered cuts, and carousels."
     }
